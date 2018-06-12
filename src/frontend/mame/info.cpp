@@ -331,6 +331,29 @@ void info_xml_creator::output(FILE *out, driver_enumerator &drivlist, bool nodev
 	output_footer();
 }
 
+void info_xml_creator::output_media(FILE *out, driver_enumerator &drivlist)
+{
+	m_output = out;
+
+	device_type_set devfilter;
+
+	fprintf(m_output, "<?xml version=\"1.0\"?>\n");
+	output_header();
+
+	// iterate through the drivers, outputting one at a time
+	while (drivlist.next()) {
+            // print the header and the machine name
+            fprintf(m_output, "\t<%s name=\"%s\">\n", XML_TOP, util::xml::normalize_string(drivlist.driver().name));
+        
+            std::shared_ptr<machine_config> const config(drivlist.config());
+            output_images(config->root_device(), "");
+            
+            // close the topmost tag
+            fprintf(m_output, "\t</%s>\n", XML_TOP);
+        }
+
+	output_footer();
+}
 
 //-------------------------------------------------
 //  output_header - print the XML DTD and open

@@ -37,6 +37,7 @@ public:
 	// output
 	void output(FILE *out, std::vector<std::string> const &patterns);
 	void output(FILE *out, driver_enumerator &drivlist, bool nodevices);
+    void output_media(FILE *out, driver_enumerator &drivlist);
 
 private:
 	typedef std::unordered_set<std::add_pointer_t<device_type> > device_type_set;

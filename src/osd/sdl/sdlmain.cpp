@@ -187,7 +187,14 @@ int main(std::vector<std::string> &args)
 #else
 int main(int argc, char** argv)
 {
-	std::vector<std::string> args(argv, argv+argc);
+	std::vector<std::string> args;
+	std::string empty_args("\"\"");
+	args.reserve(argc);
+	for (int i = 0; i < argc; i++)
+		if (empty_args.compare(argv[i]) != 0)
+			args.emplace_back(argv[i]);
+		else // Negatron: workaround for a Java bug where empty parameters are passed as "\"\"" instead of "" as expected
+			args.emplace_back("");
 #endif
 	int res = 0;
 

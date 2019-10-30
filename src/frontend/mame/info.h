@@ -35,6 +35,7 @@ public:
 	// output
 	void output(std::ostream &out, const std::vector<std::string> &patterns);
 	void output(std::ostream &out, const std::function<bool(const char *shortname, bool &done)> &filter = { }, bool include_devices = true);
+	void output_media(std::ostream &out, driver_enumerator &drivlist);
 
 private:
 	// internal state

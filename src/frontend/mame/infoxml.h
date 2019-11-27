@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include "drivenum.h"
 #include "emuopts.h"
 
 #include <functional>

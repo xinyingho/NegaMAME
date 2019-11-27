@@ -17,7 +17,6 @@
 #include "sound/samples.h"
 
 #include "config.h"
-#include "drivenum.h"
 #include "romload.h"
 #include "screen.h"
 #include "softlist_dev.h"

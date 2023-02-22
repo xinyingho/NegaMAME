@@ -581,7 +581,7 @@ void info_xml_creator::output_media(std::ostream &out, driver_enumerator &drivli
 	// iterate through the drivers, outputting one at a time -- but only one is expected
 	while (drivlist.next()) {
 		// print the header and the machine name
-		util::stream_format(out, "\t<%s name=\"%s\">\n", XML_TOP, normalize_string(drivlist.driver().name));
+		util::stream_format(out, "\t<%s name=\"%s\">\n", XML_TOP, util::xml::normalize_string(drivlist.driver().name));
 
 		const game_driver &driver(drivlist.driver());
 		machine_config config(driver, drivlist.options());

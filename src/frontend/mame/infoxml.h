@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include "drivenum.h"
 #include "emuopts.h"
 
 #include <functional>
@@ -35,7 +36,7 @@ public:
 	// output
 	void output(std::ostream &out, const std::vector<std::string> &patterns);
 	void output(std::ostream &out, const std::function<bool(const char *shortname, bool &done)> &filter = { }, bool include_devices = true);
-
+	void output_media(std::ostream &out, driver_enumerator &drivlist);
 	static char const *feature_name(device_t::feature_type feature);
 	static std::string format_sourcefile(std::string_view path);
 

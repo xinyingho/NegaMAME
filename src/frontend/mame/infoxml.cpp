@@ -19,7 +19,6 @@
 
 // emu
 #include "config.h"
-#include "drivenum.h"
 #include "main.h"
 #include "romload.h"
 #include "screen.h"
@@ -594,6 +593,31 @@ void info_xml_creator::output(std::ostream &out, const std::function<bool (const
 		output_footer(out);
 }
 
+//-------------------------------------------------
+//  output_media - print the XML information
+//  for a single machine
+//-------------------------------------------------
+
+void info_xml_creator::output_media(std::ostream &out, driver_enumerator &drivlist)
+{
+	out << "<?xml version=\"1.0\"?>\n";
+	output_header(out, false);
+
+	// iterate through the drivers, outputting one at a time -- but only one is expected
+	while (drivlist.next()) {
+		// print the header and the machine name
+		util::stream_format(out, "\t<%s name=\"%s\">\n", XML_TOP, util::xml::normalize_string(drivlist.driver().name));
+
+		const game_driver &driver(drivlist.driver());
+		machine_config config(driver, drivlist.options());
+		output_images(out, config.root_device(), "");
+
+		// close the topmost tag
+		util::stream_format(out, "\t</%s>\n", XML_TOP);
+	}
+
+	output_footer(out);
+}
 
 //**************************************************************************
 //  ANONYMOUS NAMESPACE IMPLEMENTATION

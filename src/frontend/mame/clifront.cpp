@@ -74,6 +74,7 @@
 #define CLICOMMAND_LISTDEVICES          "listdevices"
 #define CLICOMMAND_LISTSLOTS            "listslots"
 #define CLICOMMAND_LISTMEDIA            "listmedia"
+#define CLICOMMAND_LISTMEDIAXML         "listmediaxml"  // needed by Negatron
 #define CLICOMMAND_LISTSOFTWARE         "listsoftware"
 #define CLICOMMAND_VERIFYSOFTWARE       "verifysoftware"
 #define CLICOMMAND_GETSOFTLIST          "getsoftlist"
@@ -120,6 +121,7 @@ const options_entry cli_option_entries[] =
 	{ CLICOMMAND_LISTSLOTS      ";lslot",   "0",       core_options::option_type::COMMAND,    "list available slots and slot devices" },
 	{ CLICOMMAND_LISTBIOS,                  "0",       core_options::option_type::COMMAND,    "list BIOS options for a system" },
 	{ CLICOMMAND_LISTMEDIA      ";lm",      "0",       core_options::option_type::COMMAND,    "list available media for the system" },
+    { CLICOMMAND_LISTMEDIAXML   ";lmx",     "0",       core_options::option_type::COMMAND,    "list available media for the system in XML format" },
 	{ CLICOMMAND_LISTSOFTWARE   ";lsoft",   "0",       core_options::option_type::COMMAND,    "list known software for the system" },
 	{ CLICOMMAND_VERIFYSOFTWARE ";vsoft",   "0",       core_options::option_type::COMMAND,    "verify known software for the system" },
 	{ CLICOMMAND_GETSOFTLIST    ";glist",   "0",       core_options::option_type::COMMAND,    "retrieve software list by name" },
@@ -955,6 +957,25 @@ void cli_frontend::listmedia(const std::vector<std::string> &args)
 	}
 }
 
+
+//-------------------------------------------------
+//  listmediaxml - output the list of image devices
+//  referenced by a given game or set of games in XML format
+//-------------------------------------------------
+
+void cli_frontend::listmediaxml(const std::vector<std::string> &args)
+{
+	const char *gamename = args.empty() ? nullptr : args[0].c_str();
+
+	// determine which drivers to output; return an error if none found
+	driver_enumerator drivlist(m_options, gamename);
+	if (drivlist.count() == 0)
+		throw emu_fatalerror(EMU_ERR_NO_SUCH_SYSTEM, "No matching games found for '%s'", gamename);
+
+    info_xml_creator creator(m_options, false);
+	creator.output_media(std::cout, drivlist);
+}
+
 //-------------------------------------------------
 //  verifyroms - verify the ROM sets of one or
 //  more games
@@ -1698,6 +1719,7 @@ const cli_frontend::info_command_struct *cli_frontend::find_command(const std::s
 		{ CLICOMMAND_VERIFYROMS,        0, -1, &cli_frontend::verifyroms,       "[pattern] ..." },
 		{ CLICOMMAND_VERIFYSAMPLES,     0,  1, &cli_frontend::verifysamples,    "[system name|*]" },
 		{ CLICOMMAND_LISTMEDIA,         0,  1, &cli_frontend::listmedia,        "[system name]" },
+        { CLICOMMAND_LISTMEDIAXML,      0,  1, &cli_frontend::listmediaxml,     "[system name]" },
 		{ CLICOMMAND_LISTSOFTWARE,      0,  1, &cli_frontend::listsoftware,     "[system name]" },
 		{ CLICOMMAND_VERIFYSOFTWARE,    0,  1, &cli_frontend::verifysoftware,   "[system name|*]" },
 		{ CLICOMMAND_ROMIDENT,          1,  1, &cli_frontend::romident,         "(file or directory path)" },
